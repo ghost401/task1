@@ -1,0 +1,87 @@
+import sqlite3
+import os
+import sys
+from time import sleep
+
+class Database():
+
+    def __init__(self):
+        conn=sqlite3.connect("contacts.db")
+        cur=conn.cursor()
+        cur.execute("CREATE TABLE IF NOT EXISTS contact (name TEXT, surname TEXT, number INTEGER)")
+        conn.commit()
+        conn.close()
+
+    #insert values
+    def insert(self, name, surname, number):
+        conn=sqlite3.connect("contacts.db")
+        cur=conn.cursor()
+        cur.execute("INSERT INTO contact VALUES (?, ?, ?)",(name, surname, number))
+        conn.commit()
+        conn.close()
+
+    #print values
+    def view(self):
+        conn=sqlite3.connect("contacts.db")
+        cur=conn.cursor()
+        cur.execute("SELECT * FROM contact")
+        rows=cur.fetchall()
+        conn.close()
+        return rows
+
+    def search(self, req):
+        conn=sqlite3.connect("contacts.db")
+        cur=conn.cursor()
+        cur.execute("SELECT * FROM contact WHERE name = ? OR number = ?", (req, req))
+        rows=cur.fetchall()
+        conn.close()
+        return rows
+
+    def delete(self, surname):
+        conn=sqlite3.connect("contacts.db")
+        cur=conn.cursor()
+        cur.execute("DELETE FROM contact WHERE surname = ?",(surname,))
+        conn.commit()
+        conn.close()
+
+def menu():
+    print("""\
+1 - Вивiд телефонної книги на екран
+2 - Додавання елемента
+3 - Пошук елемента
+4 - Видалення елемента
+0 - Вихiд""")
+    ch = input("Ваш вибiр: ")
+    return ch
+
+def main():
+    a = 1
+    while a != "0":
+        a = menu()
+        if a == "1":
+            print(db.view())
+        elif a == "2":
+            surname = input("Введiть прiзвище: ")
+            name = input("Введiть iм'я: ")
+            number = input("Введiть номер телефона: ")
+            db.insert(name, surname, number)
+        elif a == "3":
+            req = input("Введiть iм'я або номер: ")
+            print(db.search(req))
+        elif a == "4":
+            sn = input("Введіть прізвище: ")
+            db.delete(sn)
+        elif a == "0":
+            print("Завершую роботу")
+            sleep(2)
+        else:
+            print("Неправильний ввід")
+        input("Для продовження натиснiть Enter...")
+        if sys.platform=='win32':
+            os.system('cls')
+        else:
+            os.system('clear')
+
+db = Database()
+if __name__ == "__main__":
+	main()
