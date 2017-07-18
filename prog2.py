@@ -18,14 +18,14 @@ class Database():
         con.commit()
         con.close()
 
-    '''def view(self):
+    def view(self):
         con=sqlite3.connect("parse.db")
         cur=con.cursor()
         cur.execute("SELECT * FROM npdb)
         rows = cur.fetchall()
         con.close()
         for row in rows:
-            print row'''
+            print row
 class PUParser():
 	
     def conn(self, link):
